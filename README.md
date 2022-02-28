@@ -14,3 +14,11 @@ yarn global add vite@latest
 git add .
 git commit -m "init"
 ```
+1. [公式チュートリアル](https://ja.reactjs.org/tutorial/tutorial.html)
+  ※ただし、プロジェクトの作成はviteで
+  ```bash
+    yarn create vite
+    // ✔ Project name: … react-tutorial
+    // ✔ Select a framework: › react
+    // ✔ Select a variant: › react
+  ```
