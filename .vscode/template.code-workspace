@@ -54,11 +54,11 @@
       "arjun.swagger-viewer",
       "graphql.vscode-graphql",
       // Vue
-      "octref.vetur",
-      "dariofuzinato.vue-peek",
-      "titiaiev.vue-docs",
+      // "octref.vetur",
+      // "dariofuzinato.vue-peek",
+      // "titiaiev.vue-docs",
       // "hollowtree.vue-snippets", // Vue3
-      "nicholashsiang.vscode-vue2-snippets", // Vue2
+      // "nicholashsiang.vscode-vue2-snippets", // Vue2
       // c++
       "ms-vscode.cpptools",
       // java
