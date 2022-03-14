@@ -1,65 +1,9 @@
 import React from 'react';
-
-type SquareType = 'O' | 'X' | null;
-interface SquareProps {
-  value: SquareType;
-  onClick: () => void;
-}
-
-function Square(props: SquareProps) {
-  return (
-    <button
-      className='square'
-      onClick={props.onClick}
-    >
-      {props.value}
-    </button>
-  );
-}
-
-interface BoardProps {
-  squares: SquareType[];
-  onClick: (i: number) => void; 
-}
-
-class Board extends React.Component<BoardProps> {
-  renderSquare(i: number) {
-    return (
-      <Square
-        value={this.props.squares[i]}
-        onClick={() => this.props.onClick(i)}
-      />
-    );
-  }
-
-  render() {
-    return (
-      <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
-      </div>
-    );
-  }
-}
+import { SquareType, HistoryData } from '../interface';
+import Board from './Board';
 
 interface GameProps {}
-
-interface HistoryData {
-  squares: SquareType[]
-} 
+ 
 interface GameStates {
   history: HistoryData[];
   stepNumber: number;
