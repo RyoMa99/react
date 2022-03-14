@@ -6,13 +6,13 @@ interface SquareProps {
   onClick: () => void;
 }
 
-function Square(props: SquareProps) {
+const Square: React.FC<SquareProps> = ({value, onClick}) => {
   return (
     <button
       className='square'
-      onClick={props.onClick}
+      onClick={onClick}
     >
-      {props.value}
+      {value}
     </button>
   );
 }
