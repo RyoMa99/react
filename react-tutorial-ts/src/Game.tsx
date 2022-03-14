@@ -56,10 +56,12 @@ class Board extends React.Component<BoardProps> {
 }
 
 interface GameProps {}
+
+interface HistoryData {
+  squares: SquareType[]
+} 
 interface GameStates {
-  history: {
-    squares: SquareType[]
-  }[];
+  history: HistoryData[];
   stepNumber: number;
   xIsNext: boolean;
 }
