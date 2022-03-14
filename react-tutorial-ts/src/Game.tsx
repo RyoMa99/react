@@ -1,7 +1,8 @@
 import React from 'react';
 
+type SquareType = 'O' | 'X' | null;
 interface SquareProps {
-  value: string | null;
+  value: SquareType;
   onClick: () => void;
 }
 
@@ -17,7 +18,7 @@ function Square(props: SquareProps) {
 }
 
 interface BoardProps {
-  squares: (string | null)[];
+  squares: SquareType[];
   onClick: (i: number) => void; 
 }
 
@@ -57,7 +58,7 @@ class Board extends React.Component<BoardProps> {
 interface GameProps {}
 interface GameStates {
   history: {
-    squares: (string | null)[]
+    squares: SquareType[]
   }[];
   stepNumber: number;
   xIsNext: boolean;
@@ -67,7 +68,7 @@ class Game extends React.Component<GameProps, GameStates> {
     super(props);
     this.state = {
       history: [{
-        squares: Array(9).fill(null)
+        squares: Array<SquareType>(9).fill(null)
       }],
       stepNumber: 0,
       xIsNext: true,
@@ -134,7 +135,7 @@ class Game extends React.Component<GameProps, GameStates> {
   }
 }
 
-function calculateWinner(squares: (string | null)[]){
+function calculateWinner(squares: SquareType[]){
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
