@@ -3,39 +3,51 @@ import { SquareType, HistoryData, JumpTo } from '../interface';
 import Board from './Board';
 import Moves from './Moves'; 
 
+type GameState = {
+  readonly history: HistoryData[];
+  readonly stepNumber: number;
+  readonly xIsNext: boolean;
+}
+
 const Game: React.FC = () => {
-  const [history, setHistory] = useState<HistoryData[]>([{
-    squares: Array<SquareType>(9).fill(null)
-  }]);
-  const [stepNumber, setStepNumber] = useState<number>(0);
-  const [xIsNext, setXIsNext] = useState<boolean>(true);
+  const [state, setState] = useState<GameState>({
+    history: [{
+      squares: Array<SquareType>(9).fill(null)
+    }],
+    stepNumber: 0,
+    xIsNext: true,
+  });
 
   const handleClick = (i: number) => {
-    const _history = history.slice(0, stepNumber + 1);
+    const _history = state.history.slice(0, state.stepNumber + 1);
     const current = _history[_history.length - 1];
     const squares = current.squares.slice();
     if (calculateWinner(squares) || squares[i]){
       return;
     }
-    squares[i] = xIsNext ? 'X' : 'O';
-    setHistory([..._history, {squares: squares}]);
-    setStepNumber(_history.length);
-    setXIsNext(!xIsNext);
+    squares[i] = state.xIsNext ? 'X' : 'O';
+    setState({
+      history: [..._history, {squares: squares}],
+      stepNumber: _history.length,
+      xIsNext: !state.xIsNext
+    });
   }
 
   const jumpTo: JumpTo = (step: number) => {
-    setStepNumber(step);
-    setXIsNext((step % 2) === 0);
+    setState(prev => ({
+      ...prev,
+      xIsNext: (step % 2) === 0
+    }));
   }
 
-  const current = history[stepNumber];
+  const current = state.history[state.stepNumber];
   const winner = calculateWinner(current.squares);
 
   let status;
   if(winner) {
     status = `Winner: ${winner}`;
   }else{
-    status = `Next Player: ${xIsNext ? 'X' : 'O'}`;
+    status = `Next Player: ${state.xIsNext ? 'X' : 'O'}`;
   }
 
   return (
@@ -49,7 +61,7 @@ const Game: React.FC = () => {
       <div className="game-info">
         <div>{status}</div>
         <Moves
-          history={history}
+          history={state.history}
           jumpTo={jumpTo}
         ></Moves>
       </div>

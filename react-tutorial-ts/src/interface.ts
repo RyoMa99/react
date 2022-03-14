@@ -1,5 +1,5 @@
 export type SquareType = 'O' | 'X' | null;
-export interface HistoryData {
+export type HistoryData = {
   squares: SquareType[]
 }
 export type JumpTo = (step: number) => void;

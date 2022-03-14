@@ -1,7 +1,7 @@
 import React from 'react';
 import { SquareType } from '../interface';
 
-interface SquareProps {
+type SquareProps = {
   value: SquareType;
   onClick: () => void;
 }
