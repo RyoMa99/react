@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
 import { SquareType, HistoryData, JumpTo } from '../interface';
 import Board from './Board';
 import Moves from './Moves'; 
@@ -9,36 +9,61 @@ type GameState = {
   readonly xIsNext: boolean;
 }
 
+const initialState: GameState = {
+  history: [{
+    squares: Array<SquareType>(9).fill(null)
+  }],
+  stepNumber: 0,
+  xIsNext: true,
+}
+
+type GameAction = 
+  {
+    type: "click";
+    value: number;
+  } |
+  {
+    type: "jump";
+    value: number;
+  };
+
+const reducer = (state: GameState, action: GameAction) => {
+  switch (action.type) {
+    case "click": {
+      const history = state.history.slice(0, state.stepNumber + 1);
+      const current = history[history.length - 1];
+      const squares = current.squares.slice();
+      if (calculateWinner(squares) || squares[action.value]) return state;
+      squares[action.value] = state.xIsNext ? 'X' : 'O';
+      
+      return({
+        history: [...history, {squares: squares}],
+        stepNumber: history.length,
+        xIsNext: !state.xIsNext
+      });
+    }
+    case "jump": {
+      return({
+        ...state,
+        stepNumber: action.value,
+        xIsNext: (action.value % 2 === 0)
+      });
+    }
+    default:
+      return state;
+  }
+};
+
 const Game: React.VFC = () => {
-  const [state, setState] = useState<GameState>({
-    history: [{
-      squares: Array<SquareType>(9).fill(null)
-    }],
-    stepNumber: 0,
-    xIsNext: true,
-  });
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const handleClick = (i: number) => {
-    const _history = state.history.slice(0, state.stepNumber + 1);
-    const current = _history[_history.length - 1];
-    const squares = current.squares.slice();
-    if (calculateWinner(squares) || squares[i]){
-      return;
-    }
-    squares[i] = state.xIsNext ? 'X' : 'O';
-    setState({
-      history: [..._history, {squares: squares}],
-      stepNumber: _history.length,
-      xIsNext: !state.xIsNext
-    });
-  }
+    dispatch({ type: 'click', value: i });
+  };
 
-  const jumpTo: JumpTo = (step: number) => {
-    setState(prev => ({
-      ...prev,
-      xIsNext: (step % 2) === 0
-    }));
-  }
+  const jumpTo = (step: number) => {
+    dispatch({ type: 'jump', value: step });
+  };
 
   const current = state.history[state.stepNumber];
   const winner = calculateWinner(current.squares);
