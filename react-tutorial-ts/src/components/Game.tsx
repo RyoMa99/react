@@ -9,7 +9,7 @@ type GameState = {
   readonly xIsNext: boolean;
 }
 
-const Game: React.FC = () => {
+const Game: React.VFC = () => {
   const [state, setState] = useState<GameState>({
     history: [{
       squares: Array<SquareType>(9).fill(null)

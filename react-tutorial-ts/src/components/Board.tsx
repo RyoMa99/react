@@ -7,7 +7,7 @@ type BoardProps = {
   onClick: (i: number) => void; 
 }
 
-const Board:React.FC<BoardProps> = ({squares, onClick}) => {
+const Board:React.VFC<BoardProps> = ({squares, onClick}) => {
   return (
     <div>
       {[...Array(3)].map((_,i) => {

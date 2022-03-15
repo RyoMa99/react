@@ -6,7 +6,7 @@ type SquareProps = {
   onClick: () => void;
 }
 
-const Square: React.FC<SquareProps> = ({value, onClick}) => {
+const Square: React.VFC<SquareProps> = ({value, onClick}) => {
   return (
     <button
       className='square'

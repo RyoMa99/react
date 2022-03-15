@@ -6,7 +6,7 @@ interface MovesProps {
   jumpTo: JumpTo;
 }
 
-const Moves: React.FC<MovesProps> = ({history, jumpTo}) => {
+const Moves: React.VFC<MovesProps> = ({history, jumpTo}) => {
   return (
     <ol>
       {history.map((step, move) => {
