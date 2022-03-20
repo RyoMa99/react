@@ -1,101 +1,10 @@
-import React, { useState } from 'react'
+import { useReducer } from "react";
 
-type Todo = {
-  value: string
-  readonly id: number;
-  checked: boolean;
-  removed: boolean;
-}
-
-type Filter = "all" | "checked" | "unchecked" | "removed";
-
-type TodoState = {
-  text: string;
-  todos: Todo[];
-  filter: Filter;
-}
-
+import { reducer } from "./reducer";
+import { initialState } from "./initialState";
 
 function App() {
-  const [state, setState] = useState<TodoState>({
-    text: "",
-    todos: [],
-    filter: "all"
-  });
-
-  const handleOnSubmit = () => {
-    if (!state.text) return;
-
-    const newTodo: Todo = {
-      value: state.text,
-      id: new Date().getTime(),
-      checked: false,
-      removed: false,
-    };
-
-    setState(prev => {
-      return({
-        ...prev,
-        text: "",
-        todos: [newTodo, ...state.todos],
-      })
-    })
-  }
-
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setState(prev => {
-      return({
-        ...prev,
-        text: e.target.value,
-      });
-    })
-  }
-
-  const handleOnEdit = (id: number, value: string) => {
-    const deepCopy = state.todos.map(todo => ({...todo}));
-    
-    const newTodos = deepCopy.map(todo => {
-      if (todo.id === id) todo.value = value;
-      return todo;
-    });
-
-    setState(prev => {
-      return({
-        ...prev,
-        todos: newTodos,   
-      });
-    })
-  }
-
-  const handleOnCheck = (id: number, checked: boolean) => {
-    const deepCopy = state.todos.map(todo => ({...todo}));
-    const newTodos = deepCopy.map(todo => {
-      if (todo.id === id) todo.checked = !checked;
-      return todo;
-    });
-
-    setState(prev => {
-      return({
-        ...prev,
-        todos: newTodos,   
-      });
-    })
-  }
-
-  const handleOnRemove = (id: number, removed: boolean) => {
-    const deepCopy = state.todos.map(todo => ({...todo}));
-    const newTodos = deepCopy.map(todo => {
-      if (todo.id === id) todo.removed = !removed;
-      return todo;
-    });
-
-    setState(prev => {
-      return({
-        ...prev,
-        todos: newTodos,   
-      });
-    })
-  }
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const filteredTodos = state.todos.filter(todo => {
     switch(state.filter){
@@ -112,26 +21,39 @@ function App() {
     }
   });
 
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({ type: "change", text: e.target.value });
+  };
+
+  const handleOnSubmit = () => {
+    dispatch({ type: "submit" });
+  };
+
+  const handleOnEdit = (id: number, value: string) => {
+    dispatch({ type: "edit", id, value });
+  };
+
+  const handleOnCheck = (id: number, checked: boolean) => {
+    dispatch({ type: "check", id, checked });
+  };
+
+  const handleOnRemove = (id: number, removed: boolean) => {
+    dispatch({ type: "remove", id, removed });
+  };
+
   const handleOnEmpty = () => {
-    const newTodos = state.todos.filter(todo => !todo.removed);
-    setState(prev => {
-      return({
-        ...prev,
-        todos: newTodos,   
-      });
-    })
-  }
+    dispatch({ type: "empty" });
+  };
+
+  const handleOnFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    dispatch({ type: "filter", filter: e.target.value as Filter });
+  };
 
   return (
     <div className="App">
       <select
         defaultValue="all"
-        onChange={(e) => setState(prev => {
-          return({
-            ...prev,
-            filter: e.target.value as Filter
-          })
-        })}
+        onChange={handleOnFilter}
       >
         <option value="all">すべてのタスク</option>
         <option value="checked">完了したタスク</option>
@@ -140,7 +62,12 @@ function App() {
       </select>
       {
         state.filter === "removed" ? (
-          <button onClick={handleOnEmpty}>ごみ箱を空にする</button>
+          <button
+            onClick={handleOnEmpty}
+            disabled={state.todos.filter(todo => (todo.removed)).length === 0}
+          >
+            ごみ箱を空にする
+          </button>
         ) : (
           <form
             onSubmit={(e) => {
@@ -177,9 +104,9 @@ function App() {
                 type="text"
                 disabled={todo.checked || todo.removed}
                 value={todo.value}
-                onChange={e => handleOnEdit(todo.id, e.target.value)} 
+                onChange={(e) => handleOnEdit(todo.id, e.target.value)} 
               />
-              <button onClick={() => handleOnRemove(todo.id, todo.removed)}>
+              <button onClick={() =>handleOnRemove(todo.id, todo.removed)}>
                 {todo.removed ? "復元" : "削除"}
               </button>
             </li>);
@@ -190,4 +117,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
