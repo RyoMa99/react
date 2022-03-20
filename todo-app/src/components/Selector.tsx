@@ -1,12 +1,11 @@
-import { Dispatch, memo } from "react";
+import { useContext, memo } from "react";
+import { context } from "../context";
 
-type Props = {
-  dispatch: Dispatch<Action>;
-}
+export const Selector = memo(() => {
+  const {state, dispatch} = useContext(context);
 
-export const Selector = memo((props: Props) => {
   const handleOnFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    props.dispatch({ type: "filter", filter: e.target.value as Filter });
+    dispatch({ type: "filter", filter: e.target.value as Filter });
   };
 
   return (

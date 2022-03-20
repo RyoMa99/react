@@ -1,7 +1,8 @@
 import { useReducer } from "react";
 
-import { reducer } from "./reducer";
 import { initialState } from "./initialState";
+import { reducer } from "./reducer";
+import { context } from "./context";
 
 import { Form } from "./components/Form";
 import { EmptyButton } from "./components/EmptyButton";
@@ -12,17 +13,19 @@ function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
-    <div className="App">
-      <Selector dispatch={dispatch} />
-      {
-        state.filter === "removed" ? (
-          <EmptyButton state={state} dispatch={dispatch} />
-        ) : (
-          <Form state={state} dispatch={dispatch} />
-        )
-      }
-      <FilteredTodos state={state} dispatch={dispatch} />
-    </div>
+    <context.Provider value={{ state, dispatch }}>
+      <div className="App">
+        <Selector />
+        {
+          state.filter === "removed" ? (
+            <EmptyButton />
+          ) : (
+            <Form />
+          )
+        }
+        <FilteredTodos />
+      </div>
+    </context.Provider>
   )
 }
 

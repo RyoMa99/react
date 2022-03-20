@@ -1,25 +1,23 @@
-import { Dispatch, memo } from "react";
+import { useContext, memo } from "react";
+import { context } from "../context";
 
-type Props = {
-  state: State;
-  dispatch: Dispatch<Action>;
-}
+export const FilteredTodos = memo(() => {
+  const {state, dispatch} = useContext(context);
 
-export const FilteredTodos = memo((props: Props) => {
   const handleOnEdit = (id: number, value: string) => {
-    props.dispatch({ type: "edit", id, value });
+    dispatch({ type: "edit", id, value });
   };
 
   const handleOnCheck = (id: number, checked: boolean) => {
-    props.dispatch({ type: "check", id, checked });
+    dispatch({ type: "check", id, checked });
   };
 
   const handleOnRemove = (id: number, removed: boolean) => {
-    props.dispatch({ type: "remove", id, removed });
+    dispatch({ type: "remove", id, removed });
   };
 
-  const filteredTodos = props.state.todos.filter(todo => {
-    switch(props.state.filter){
+  const filteredTodos = state.todos.filter(todo => {
+    switch(state.filter){
       case "all":
         return !todo.removed;
       case "checked":

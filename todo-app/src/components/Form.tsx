@@ -1,17 +1,15 @@
-import { Dispatch, memo } from "react";
+import { useContext, memo } from "react";
+import { context } from "../context";
 
-type Props = {
-  state: State;
-  dispatch: Dispatch<Action>;
-}
+export const Form = memo(() => {
+  const {state, dispatch} = useContext(context);
 
-export const Form = memo((props: Props) => {
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    props.dispatch({ type: "change", text: e.target.value });
+    dispatch({ type: "change", text: e.target.value });
   };
 
   const handleOnSubmit = () => {
-    props.dispatch({ type: "submit" });
+    dispatch({ type: "submit" });
   };
 
   return(
@@ -22,14 +20,14 @@ export const Form = memo((props: Props) => {
     }}>
       <input
         type="text"
-        value={props.state.text}
-        disabled={props.state.filter === "checked"}
+        value={state.text}
+        disabled={state.filter === "checked"}
         onChange={handleOnChange}
       />
       <input
         type="submit"
         value="追加"
-        disabled={props.state.filter === "checked"}
+        disabled={state.filter === "checked"}
         onSubmit={handleOnSubmit}
       />
     </form>            
