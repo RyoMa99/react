@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Modal from "react-modal";
 
 import "./App.css";
 import BookRow from "./components/BookRow";
 import BookSearchDialog from "./components/BookSearchDialog";
+import { setItems, getItems } from "./localstorage";
 
 Modal.setAppElement("#root");
 
@@ -33,6 +34,22 @@ const App = () => {
     modalIsOpen: false,
   });
   
+  useEffect(() => {
+    const storedBooks = getItems();
+    if(!storedBooks) return;
+
+    setState((prev) => {
+      return({
+        ...prev,
+        books: storedBooks,
+      });
+    });
+  },[]);
+
+  useEffect(() => {
+    setItems(state.books);
+  },[state.books]);
+
   const handleBookDelete = (id: number) => {
     const newBooks = state.books.filter((b) => b.id !== id);
     setState((prev) => {
