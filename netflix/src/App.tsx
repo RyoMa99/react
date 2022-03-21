@@ -5,11 +5,13 @@ import { request } from "./api/request";
 
 import Banner from "./components/Banner/Banner";
 import Row from "./components/Row/Row";
+import Nav from "./components/Nav/Nav";
 
 const App: React.VFC = () => {
 
   return (
     <div className="App">
+      <Nav />
       <Banner />
       <Row
         title="NETFLIX ORIGINALS"
