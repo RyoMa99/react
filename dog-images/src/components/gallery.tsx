@@ -1,12 +1,18 @@
 import React from "react";
 
 import Image from "./image";
+import Loading from "./loading";
 
 type GalleryProps = {
-  urlList: string[]
+  urlList: string[] | null
 }
 
 const Gallery: React.VFC<GalleryProps> = ({urlList}) => {
+  if(!urlList?.length){
+    return(
+      <Loading />
+    );
+  }
 
   return (
     <div className="columns is-vcentered is-multiline">

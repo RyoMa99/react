@@ -1,10 +1,19 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+
+import { fetchImages } from "../api/fetch";
 
 import Gallery from "./gallery";
 
-import { urlList } from "../dummyData";
-
 const Main: React.VFC = () => {
+  const [urlList, setUrlList] = useState(null);
+
+  useEffect(() => {
+    fetchImages("shiba")
+      .then((urls) => {
+        setUrlList(urls);
+      })
+  },[]);
+
   return (
     <main>
       <section className="section">
