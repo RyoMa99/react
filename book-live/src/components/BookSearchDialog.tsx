@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import BookSearchItem  from "./BookSearchItem";
-import { buildSearchUrl, extractBooks } from "../api/BookSearch";
+import { fetchBooks } from "../api/BookSearch";
 
 type BookSearchDialogProps = {
   maxResults: number;
@@ -24,25 +24,15 @@ const BookSearchDialog = (props: BookSearchDialogProps) => {
 
   useEffect(() => {
     if(state.isSearching) {
-      const url = buildSearchUrl(state.title, state.author, props.maxResults);
-      fetch(url)
-        .then((res) => {
-          return res.json();
-        })
-        .then((json) => {
-          return extractBooks(json);
-        })
-        .then((books) => {
-          setState((prev) => {
-            return({
-              ...prev,
-              books: books
-            });
+      (async () => {
+        const books = await fetchBooks(state.title, state.author, props.maxResults);
+        setState((prev) => {
+          return({
+            ...prev,
+            books: books,
           });
-        })
-        .catch((err) => {
-          console.error(err);
-        })
+        });
+      })();
     }
     setState((prev) => {
       return({
