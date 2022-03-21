@@ -66,9 +66,9 @@ const BookSearchDialog = (props: BookSearchDialogProps) => {
             検索
           </div>
         </div>
-        <div className="search-results">
-          {bookItems}
-        </div>
+      </div>
+      <div className="search-results">
+        {bookItems}
       </div>
     </div>
   );
