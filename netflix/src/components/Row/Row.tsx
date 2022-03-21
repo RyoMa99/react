@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+import YouTube from "react-youtube";
 import instance from "../../api/api";
+import { request } from "../../api/request";
 import "./Row.scss";
 
 type Props = {
@@ -17,24 +19,70 @@ type Movie = {
   backdrop_path: string;
 };
 
+type Option = {
+  height: string;
+  width: string;
+  playerVars: {
+    autoplay: 0 | 1 | undefined;
+  };
+};
+
+type RowState = {
+  movies: Movie[];
+  trailerUrl: string | null;
+};
+
 const Row: React.VFC<Props> = ({title, fetchUrl, isLargeRow}) => {
-  const [movies, setMovies] = useState<Movie[]>([]);
+  const [state, setState] = useState<RowState>({
+    movies: [],
+    trailerUrl: "",
+  });
 
   useEffect(() => {
     (async () => {
       const req = await instance.get(fetchUrl);
-      setMovies(req.data.results);
+      setState((prev) => {
+        return({
+          ...prev,
+          movies: req.data.results,
+        });
+      });
     })();
   },[fetchUrl]);
 
-  console.log(movies);
+  const opts: Option = {
+    height: "390",
+    width: "640",
+    playerVars: {
+      autoplay: 1
+    },
+  }
+
+  const handleClick = async (movie: Movie) => {
+    if(state.trailerUrl){
+      setState((prev) => {
+        return({
+          ...prev,
+          trailerUrl: "",
+        });
+      });
+    }else{
+      const trilerUrl = await instance.get(request.fetchMovieTrailer(movie.id));
+      setState((prev) => {
+        return({
+          ...prev,
+          trailerUrl: trilerUrl.data.results[0]?.key
+        });
+      });
+    }
+  }
 
   return(
     <div className="Row">
       <h2>{title}</h2>
       <div className="Row-posters">
         {
-          movies.map((movie) => {
+          state.movies.map((movie) => {
             return(
               <img
                 key={movie.id}
@@ -44,11 +92,13 @@ const Row: React.VFC<Props> = ({title, fetchUrl, isLargeRow}) => {
                   : movie.backdrop_path
                 }`}
                 alt={movie.name}
+                onClick={() => handleClick(movie)}
               />
             );
           })
         }
       </div>
+      {state.trailerUrl && <YouTube videoId={state.trailerUrl} opts={opts} />}
     </div>
   );
 } 
