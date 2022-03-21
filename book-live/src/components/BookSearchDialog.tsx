@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import BookSearchItem  from "./BookSearchItem";
-import { fetchBooks } from "../api/BookSearch";
+import useBookData from "../hooks/useBookData";
 
 type BookSearchDialogProps = {
   maxResults: number;
@@ -8,57 +8,37 @@ type BookSearchDialogProps = {
 }
 
 type BookSearchDialogState = {
-  books: BookDescription[];
-  isSearching: boolean;
+  title: string;
+  author: string;
 }
 
 const BookSearchDialog = (props: BookSearchDialogProps) => {
-  const [state, setState] = useState<BookSearchDialogState>({
-    books: [],
-    isSearching: false,
-  });
-
   const titleRef = useRef<HTMLInputElement>(null);
   const authorRef = useRef<HTMLInputElement>(null);
+  const [state, setState] = useState<BookSearchDialogState>({
+    title: "",
+    author: "",
+  })
 
-  useEffect(() => {
-    if(state.isSearching) {
-      (async () => {
-        const books = await fetchBooks(titleRef.current!.value, authorRef.current!.value, props.maxResults);
-        setState((prev) => {
-          return({
-            ...prev,
-            books: books,
-          });
-        });
-      })();
-    }
-    setState((prev) => {
-      return({
-        ...prev,
-        isSearching: false,
-      });
-    });
-  },[state.isSearching]);
+  const [bookData, setBookDataState] = useBookData(state.title, state.author, props.maxResults);
 
   const handleSearchClick = () => {
     if(!titleRef.current!.value && !authorRef.current!.value){
       alert("条件を入力してください。");
       return;
     }
-    setState((prev) => {
-      return({
-        ...prev,
-        isSearching: true,
-      });
-    }); 
-  }
+
+    setState({
+      title: titleRef.current!.value,
+      author: authorRef.current!.value,
+    });
+  };
 
   const handleBookAdd = (book: BookDescription) => {
     props.onBookAdd(book);
   };
 
-  const bookItems = state.books.map((b, idx) => {
+  const bookItems = bookData.books.map((b, idx) => {
     return(
       <BookSearchItem
         description={b}
