@@ -3,12 +3,14 @@ import React from "react";
 import "./App.css";
 import { request } from "./api/request";
 
+import Banner from "./components/Banner/Banner";
 import Row from "./components/Row/Row";
 
 const App: React.VFC = () => {
 
   return (
     <div className="App">
+      <Banner />
       <Row
         title="NETFLIX ORIGINALS"
         fetchUrl={request.fetchNetflixOriginals}

@@ -39,7 +39,7 @@ const Row: React.VFC<Props> = ({title, fetchUrl, isLargeRow}) => {
               <img
                 key={movie.id}
                 className={`Row-poster ${isLargeRow && "Row-poster-large"}`}
-                src={`https://image.tmdb.org/t/p/w500${ isLargeRow 
+                src={`https://image.tmdb.org/t/p/original${ isLargeRow 
                   ? movie.poster_path
                   : movie.backdrop_path
                 }`}
