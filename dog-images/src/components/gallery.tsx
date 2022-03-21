@@ -2,13 +2,21 @@ import React from "react";
 
 import Image from "./image";
 
-const Gallery: React.VFC = () => {
+type GalleryProps = {
+  urlList: string[]
+}
+
+const Gallery: React.VFC<GalleryProps> = ({urlList}) => {
 
   return (
     <div className="columns is-vcentered is-multiline">
-      <div className="column is-3">
-        <Image url="https://images.dog.ceo/breeds/shiba/shiba-8.jpg"/>
-      </div>
+      {urlList.map((url) => {
+        return(
+          <div key={url} className="column is-3">
+            <Image url={url} />
+          </div>
+        );
+      })}
     </div>
   );
 };

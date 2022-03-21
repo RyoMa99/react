@@ -2,13 +2,14 @@ import React from "react";
 
 import Gallery from "./gallery";
 
-const Main: React.VFC = () => {
+import { urlList } from "../dummyData";
 
+const Main: React.VFC = () => {
   return (
     <main>
       <section className="section">
         <div className="container">
-          <Gallery />
+          <Gallery urlList={urlList} />
         </div>
       </section>
     </main>
